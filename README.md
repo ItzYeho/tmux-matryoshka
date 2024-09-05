@@ -71,6 +71,11 @@ set -g @matryoshka_inactive_status_style 'fg=colour245,bg=colour238'
 # name of the option for the style of the status line
 # set if you rely on something other than the default 'status-style' option for it
 set -g @matryoshka_status_style_option 'my-status-style'
+
+# you can also set dynamic inactive status styles which
+# will be ran when the session becomes inactive
+set -g @matryoshka_dynamic_inactive_style 'on'
+set -g @matryoshka_inactive_status_style '$(tmux show-option -gqv window-status-format)'
 ```
 
 Include them in your `.tmux.conf` before running the setup.

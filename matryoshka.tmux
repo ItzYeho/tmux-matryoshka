@@ -17,6 +17,10 @@ if [ -z "$inactive_status_style" ]; then inactive_status_style='fg=colour245,bg=
 
 status_style_option="$(tmux show-option -gqv @matryoshka_status_style_option)"
 if [ -z "$status_style_option" ]; then status_style_option='status-style'; fi
+
+inactive_status_style_cmd="set \"$status_style_option\" \"$inactive_status_style\""
+dynamic_inactive_style="$(tmux show-option -gqv @matryoshka_dynamic_inactive_style)"
+if [ "$dynamic_inactive_style" = "on" ]; then inactive_status_style_cmd="run 'tmux $inactive_status_style_cmd'"; fi
 # <<< Keybinds and default values
 
 MATRYOSHKA_COUNTER_ENV_NAME='MATRYOSHKA_COUNTER'
@@ -28,7 +32,7 @@ tmux bind -n "$down_keybind" \
 "set key-table \"$MATRYOSHKA_INACTIVE_TABLE_NAME\" ; "\
 'set prefix None ; '\
 'set prefix2 None ; '\
-"set \"$status_style_option\" \"$inactive_status_style\""
+"$inactive_status_style_cmd"
 tmux bind -T "$MATRYOSHKA_INACTIVE_TABLE_NAME" "$down_keybind" \
 "run-shell 'tmux set-environment \"$MATRYOSHKA_COUNTER_ENV_NAME\" \$(( \$(tmux show-environment \"$MATRYOSHKA_COUNTER_ENV_NAME\" | cut -d = -f 2) + 1 ))' ; "\
 "send-keys \"$down_keybind\""
